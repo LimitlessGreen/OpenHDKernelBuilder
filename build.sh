@@ -95,8 +95,8 @@ build_pi_kernel() {
     pushd rcio-dkms
         make clean
         ARCH=${ARCH} CROSS_COMPILE="ccache ${CROSS_COMPILE}" make KSRC=${LINUX_DIR} -j $J_CORES M=$(pwd) modules || exit 1
-        mkdir -p ${PACKAGE_DIR}/lib/modules/${KERNEL_VERSION}/updates/
-        install -p -m 644 *.ko "${PACKAGE_DIR}/lib/modules/${KERNEL_VERSION}/updates/" || exit 1
+        mkdir -p ${PACKAGE_DIR}/lib/modules/${KERNEL_VERSION}/kernel/drivers/rcio/
+        install -p -m 644 *.ko "${PACKAGE_DIR}/lib/modules/${KERNEL_VERSION}/kernel/drivers/rcio/" || exit 1
     popd
         
 
