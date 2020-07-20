@@ -21,6 +21,8 @@ RTL_8812BU_BRANCH=5.6.1_30362.20181109_COEX20180928-6a6a
 V4L2LOOPBACK_REPO=https://github.com/OpenHD/v4l2loopback.git
 V4L2LOOPBACK_BRANCH=openhd1
 
+RCIO_DKMS_REPO=https://github.com/emlid/rcio-dkms.git
+RCIO_DKMS_BRANCH=master # f8e6cb41ee38186e80bd81d77c892e0522900ac4
 
 
 #####################
@@ -49,6 +51,12 @@ init
 setup_pi_env
 
 
+fetch_rcio-dkms_driver() {
+    if [[ ! -d rcio-dkms ]]; then    
+        echo "Download the rcio-dkms driver"
+        git clone ${RCIO_DKMS_REPO}
+    fi    
+}
 
 build_pi_kernel() {
     echo "Building pi kernel"
@@ -84,6 +92,14 @@ build_pi_kernel() {
     build_rtl8812au_driver
     build_rtl8812bu_driver
 
+    pushd rcio-dkms
+        make clean
+        ARCH=${ARCH} CROSS_COMPILE="ccache ${CROSS_COMPILE}" make KSRC=${LINUX_DIR} -j $J_CORES M=$(pwd) modules || exit 1
+        mkdir -p ${PACKAGE_DIR}/lib/modules/${KERNEL_VERSION}/updates/
+        install -p -m 644 *.ko "${PACKAGE_DIR}/lib/modules/${KERNEL_VERSION}/updates/" || exit 1
+    popd
+        
+
     cp ${SRC_DIR}/overlay/boot/* "${PACKAGE_DIR}/usr/local/share/openhd/kernel/" || exit 1
 
     depmod -b ${PACKAGE_DIR} ${KERNEL_VERSION}
@@ -95,6 +111,7 @@ prepare_build() {
     fetch_rtl8812au_driver
     fetch_rtl8812bu_driver
     fetch_v4l2loopback_driver
+    fetch_rcio-dkms_driver
     build_pi_kernel
 }
 
