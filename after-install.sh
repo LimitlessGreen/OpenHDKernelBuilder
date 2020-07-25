@@ -18,7 +18,15 @@ depmod -a
 
 mount -oremount,ro /boot || true
 
-grep "i2c-dev" /etc/modules
-if [[ "$?" -ne 0 ]]; then
-    echo "i2c-dev" >> /etc/modules
-fi
+function add_module() {
+    local module=$1
+    
+    grep "${module}" /etc/modules
+    if [[ "$?" -ne 0 ]]; then
+        echo "${module}" >> /etc/modules
+    fi
+}
+
+add_module "i2c-dev"
+add_module "rcio_core"
+add_module "rcio_spi"
