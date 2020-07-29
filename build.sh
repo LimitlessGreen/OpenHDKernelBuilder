@@ -70,7 +70,8 @@ build_pi_kernel() {
 
         yes "" | make oldconfig || exit 1
 
-        KERNEL=${KERNEL} KBUILD_BUILD_TIMESTAMP='' make -j $J_CORES zImage modules dtbs || exit 1
+        KBUILD_BUILD_TIMESTAMP='' make -j $J_CORES zImage modules dtbs deb-pkg LOCALVERSION=-openhd KDEB_PKGVERSION=""
+
 
         echo "Copy kernel"
         cp arch/arm/boot/zImage "${PACKAGE_DIR}/usr/local/share/openhd/kernel/${KERNEL}.img" || exit 1
