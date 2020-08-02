@@ -21,6 +21,8 @@ RTL_8812BU_BRANCH=5.6.1_30362.20181109_COEX20180928-6a6a
 V4L2LOOPBACK_REPO=https://github.com/OpenHD/v4l2loopback.git
 V4L2LOOPBACK_BRANCH=openhd1
 
+I2SAUDIO_REPO=https://github.com/PaulCreaser/rpi-i2s-audio.git
+I2SAUDIO_BRANCH=master
 
 
 #####################
@@ -83,6 +85,7 @@ build_pi_kernel() {
     # Build Realtek drivers
     build_rtl8812au_driver
     build_rtl8812bu_driver
+    build_i2s-audio_driver
 
     cp ${SRC_DIR}/overlay/boot/* "${PACKAGE_DIR}/usr/local/share/openhd/kernel/" || exit 1
 
@@ -95,6 +98,7 @@ prepare_build() {
     fetch_rtl8812au_driver
     fetch_rtl8812bu_driver
     fetch_v4l2loopback_driver
+    fetch_i2s-audio_driver
     build_pi_kernel
 }
 
